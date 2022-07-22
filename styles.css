@@ -23,6 +23,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 .container {
     min-width: 300px;
@@ -56,18 +57,19 @@ button {
     text-align: end;
 
     background-color: #ffffff;
-    border-color: #383535;
-    border-width: 2px;
-    border-style: solid;
     border-radius: 5px;
+    border: none;
     
     padding: 10px;
     margin: 0 auto 20px;
+    box-shadow: 3px 3px 4px 1px rgba(78, 71, 62, 0.255);
+
 }
 .calc__btn--wrapper {
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
+    margin-bottom: 28px;
 }
 .number__btns {
     display: grid;
@@ -78,12 +80,14 @@ button {
     border-radius: 5px;
     border-width: 1px;
     background-color: #AD8A67;
+    border-color: #ffffff;
     color: #ffffff;
 }
 .accent__btn {
     border-radius: 5px;
     border-width: 1px;
     background-color: #FFC0B9;
+    border-color: #ffffff;
     color: #000000;
     font-size: 28px;
 }
@@ -100,3 +104,15 @@ button {
     background-color: #FFF6E7;
     color: #000000;
 }
+.accent__btn:active,
+.number__btn:active,
+.operator__btn:active {
+    box-shadow: 3px 3px 4px 1px rgba(78, 71, 62, 0.255);
+}
+
+.project__author {
+    font-size: 12px;
+    font-style: italic;
+    color: #ffffff;
+    text-align: right;
+} 

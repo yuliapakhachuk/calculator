@@ -20,7 +20,8 @@ class Calculator extends MathOper {
         operators: document.querySelectorAll('.operator__btn'),
         equal: document.querySelector('.result'),
         calcMemoryElement: document.querySelector('.calculator__memory'),
-        backspaceBtn: document.querySelector('.recet'),
+        backspaceBtn: document.querySelector('.reset'),
+        resetCalc: document.querySelector('.resetAC'),
     }
 
     calcMemory = [];
@@ -31,43 +32,70 @@ class Calculator extends MathOper {
     constructor() {
         super();
         this.refs.numKeys.forEach(numKey => numKey.addEventListener('click', (e) => this.showOnDisplay(e)));
+        window.addEventListener('keydown', (e) => this.showOnDisplay(e));
         this.refs.operators.forEach(operator => operator.addEventListener('click', (e) => this.toMakeMathOperation(e)));
-        this.refs.equal.addEventListener('click', (e) => this.toMakeMathOperation(e));
-        // this.backspaceBtn.addEventListener('click', () => removeOneNumber())
+        window.addEventListener('keydown', (e) => this.toMakeMathOperation(e));
+        this.refs.equal.addEventListener('click', (e) => this.toGetTotalResult(e));
+        this.refs.equal.addEventListener('keydown', (e) => this.toGetTotalResult(e));
+        this.refs.backspaceBtn.addEventListener('click', () => this.removeOneNumber());
+        this.refs.resetCalc.addEventListener('click', () => this.resetCalculator());
     }
     
     showOnDisplay(e) {
-        this.curentValue = this.curentValue + `${e.target.innerText}`;
+        const availableNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+        let number = e.type === "keydown" ? e.key : e.target.innerText;
+        if (!availableNumbers.includes(number)) { return; };
+        this.curentValue = `${this.curentValue}` + `${number}`;
+        console.log(this.curentValue)
+        this.refs.display.innerText = this.curentValue;
+    }
+
+    removeOneNumber() {
+        this.curentValue.length <= 1 ? 
+            this.curentValue = "" :
+            this.curentValue = this.curentValue.slice(0, this.curentValue.length - 1);
         this.refs.display.innerText = this.curentValue;
     }
     
     toMakeMathOperation(e) {
-        if(!this.operator) {
-            this.#result = Number(this.curentValue);
-            this.operator = (e.target.dataset.value);
-        } else {
-            this.#result = super.getResult(this.operator, this.curentValue, this.#result);
-            this.operator = (e.target.dataset.value);
-            this.refs.display.innerText = this.#result;
+        const availableMathOper = ["+", "-", "*", "/"];
+        if(e.type === "keydown") {
+            if (!availableMathOper.includes(e.key)) {
+                return;
+            }
         }
 
-        e.target.dataset.value === "=" ? 
-                    this.clearHistory() : this.recordHistory();
-        
-        this.curentValue = "";
+        if(!this.operator) {
+            this.#result = Number(this.curentValue);
+        } else {
+            if(this.currentValue) {
+                this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+                this.refs.display.innerText = this.#result;
+            }
+        }
+        this.operator = e.type === "keydown" ? e.key : (e.target.dataset.value);
+        this.recordHistory();
         this.refs.display.innerText = this.#result;
-        console.log(this.calcMemory);
+        this.curentValue = "";
+    }
+
+    toGetTotalResult() {
+        this.clearHistory();
+        this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+        this.refs.display.innerText = this.#result;
+        this.calcMemory.push(this.#result);
+        this.curentValue = "";
     }
 
     recordHistory() {
-        this.curentValue === "" ? this.calcMemory.push() : this.calcMemory.push(this.curentValue);
-        
-        const lastHistoryElement = this.calcMemory[this.calcMemory.length - 1];
+        if (this.curentValue) {
+            this.calcMemory.push(this.curentValue);
+        }
 
+        const lastHistoryElement = this.calcMemory.at(-1);
         !isNaN(Number(lastHistoryElement)) ? 
-                    this.calcMemory.push(this.operator) : 
-                    this.calcMemory[this.calcMemory.length - 1] = this.operator;
-        
+            this.calcMemory.push(this.operator) : 
+            this.calcMemory[this.calcMemory.length - 1] = this.operator;
         this.showCalcHistory();
     }
 
@@ -78,15 +106,17 @@ class Calculator extends MathOper {
     
     showCalcHistory() {
         const history = this.calcMemory.join("");
-        // this.calcMemory += `${this.curentValue} ${this.operator}`;
         this.refs.calcMemoryElement.innerText = history;
     }
 
-    // removeOneNumber() {
-
-    // }
+    resetCalculator() {
+        this.#result = 0;
+        this.curentValue = "";
+        this.operator;
+        this.refs.display.innerText = 0;
+        this.clearHistory();
+    }
 }
 
 const calculator = new Calculator();
 const mathOper = new MathOper();
-    
