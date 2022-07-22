@@ -36,9 +36,10 @@ class Calculator extends MathOper {
         this.refs.operators.forEach(operator => operator.addEventListener('click', (e) => this.toMakeMathOperation(e)));
         window.addEventListener('keydown', (e) => this.toMakeMathOperation(e));
         this.refs.equal.addEventListener('click', (e) => this.toGetTotalResult(e));
-        this.refs.equal.addEventListener('keydown', (e) => this.toGetTotalResult(e));
+        // this.refs.equal.addEventListener('keydown', (e) => this.toGetTotalResult(e));
         this.refs.backspaceBtn.addEventListener('click', () => this.removeOneNumber());
         this.refs.resetCalc.addEventListener('click', () => this.resetCalculator());
+        window.addEventListener('keydown', (e) => this.contolKeyboard(e));
     }
     
     showOnDisplay(e) {
@@ -46,7 +47,6 @@ class Calculator extends MathOper {
         let number = e.type === "keydown" ? e.key : e.target.innerText;
         if (!availableNumbers.includes(number)) { return; };
         this.curentValue = `${this.curentValue}` + `${number}`;
-        console.log(this.curentValue)
         this.refs.display.innerText = this.curentValue;
     }
 
@@ -60,11 +60,8 @@ class Calculator extends MathOper {
     toMakeMathOperation(e) {
         const availableMathOper = ["+", "-", "*", "/"];
         if(e.type === "keydown") {
-            if (!availableMathOper.includes(e.key)) {
-                return;
-            }
+            if (!availableMathOper.includes(e.key)) { return; }
         }
-
         if(!this.operator) {
             this.#result = Number(this.curentValue);
         } else {
@@ -79,7 +76,8 @@ class Calculator extends MathOper {
         this.curentValue = "";
     }
 
-    toGetTotalResult() {
+    toGetTotalResult(e) {
+        console.log(e);
         this.clearHistory();
         this.#result = super.getResult(this.operator, this.curentValue, this.#result);
         this.refs.display.innerText = this.#result;
@@ -91,7 +89,6 @@ class Calculator extends MathOper {
         if (this.curentValue) {
             this.calcMemory.push(this.curentValue);
         }
-
         const lastHistoryElement = this.calcMemory.at(-1);
         !isNaN(Number(lastHistoryElement)) ? 
             this.calcMemory.push(this.operator) : 
@@ -115,6 +112,21 @@ class Calculator extends MathOper {
         this.operator;
         this.refs.display.innerText = 0;
         this.clearHistory();
+    }
+
+    contolKeyboard(e) {
+        console.log(e);
+        switch(e.key) {
+            case "Enter":
+                this.toGetTotalResult();
+                break;
+            case "=":
+                this.toGetTotalResult();
+                break;
+            case "Backspace":
+                this.removeOneNumber();
+                break;
+        }
     }
 }
 
