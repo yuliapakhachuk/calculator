@@ -2,9 +2,9 @@ class MathOper {
     getResult(operator, curentValue, resultValue) {
         switch(operator) {
             case "*":
-                return ((Number(resultValue) * 1000000) * (Number(curentValue) * 1000000)) / 1000000;
+                return (Number(resultValue) * Number(curentValue));
             case "/":
-                return ((Number(resultValue) * 1000000) / (Number(curentValue) * 1000000)) / 1000000;
+                return (Number(resultValue)) / (Number(curentValue));
             case "-":
                 return ((Number(resultValue) * 1000000) - (Number(curentValue) * 1000000)) / 1000000;
             case "+":
@@ -77,7 +77,6 @@ class Calculator extends MathOper {
     }
 
     toGetTotalResult(e) {
-        console.log(e);
         this.clearHistory();
         this.#result = super.getResult(this.operator, this.curentValue, this.#result);
         this.refs.display.innerText = this.#result;
