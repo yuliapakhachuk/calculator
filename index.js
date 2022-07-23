@@ -2,9 +2,9 @@ class MathOper {
     getResult(operator, curentValue, resultValue) {
         switch(operator) {
             case "*":
-                return (Number(resultValue) * Number(curentValue));
+                return Number(resultValue) * Number(curentValue);
             case "/":
-                return (Number(resultValue)) / (Number(curentValue));
+                return Number(resultValue) / Number(curentValue);
             case "-":
                 return ((Number(resultValue) * 1000000) - (Number(curentValue) * 1000000)) / 1000000;
             case "+":
@@ -33,10 +33,9 @@ class Calculator extends MathOper {
         super();
         this.refs.numKeys.forEach(numKey => numKey.addEventListener('click', (e) => this.showOnDisplay(e)));
         window.addEventListener('keydown', (e) => this.showOnDisplay(e));
-        this.refs.operators.forEach(operator => operator.addEventListener('click', (e) => this.toMakeMathOperation(e)));
-        window.addEventListener('keydown', (e) => this.toMakeMathOperation(e));
-        this.refs.equal.addEventListener('click', (e) => this.toGetTotalResult(e));
-        // this.refs.equal.addEventListener('keydown', (e) => this.toGetTotalResult(e));
+        this.refs.operators.forEach(operator => operator.addEventListener('click', (e) => this.makeMathOperation(e)));
+        window.addEventListener('keydown', (e) => this.makeMathOperation(e));
+        this.refs.equal.addEventListener('click', (e) => this.getTotalResult(e));
         this.refs.backspaceBtn.addEventListener('click', () => this.removeOneNumber());
         this.refs.resetCalc.addEventListener('click', () => this.resetCalculator());
         window.addEventListener('keydown', (e) => this.contolKeyboard(e));
@@ -57,7 +56,7 @@ class Calculator extends MathOper {
         this.refs.display.innerText = this.curentValue;
     }
     
-    toMakeMathOperation(e) {
+    makeMathOperation(e) {
         const availableMathOper = ["+", "-", "*", "/"];
         if(e.type === "keydown") {
             if (!availableMathOper.includes(e.key)) { return; }
@@ -65,18 +64,21 @@ class Calculator extends MathOper {
         if(!this.operator) {
             this.#result = Number(this.curentValue);
         } else {
-            if(this.currentValue) {
+            if(!this.curentValue) {
+                this.curentValue === this.#result;
+            } else {
                 this.#result = super.getResult(this.operator, this.curentValue, this.#result);
-                this.refs.display.innerText = this.#result;
             }
+            this.refs.display.innerText = this.#result;
         }
+        
         this.operator = e.type === "keydown" ? e.key : (e.target.dataset.value);
         this.recordHistory();
         this.refs.display.innerText = this.#result;
         this.curentValue = "";
     }
 
-    toGetTotalResult(e) {
+    getTotalResult() {
         this.clearHistory();
         this.#result = super.getResult(this.operator, this.curentValue, this.#result);
         this.refs.display.innerText = this.#result;
@@ -116,10 +118,10 @@ class Calculator extends MathOper {
     contolKeyboard(e) {
         switch(e.key) {
             case "Enter":
-                this.toGetTotalResult();
+                this.getTotalResult();
                 break;
             case "=":
-                this.toGetTotalResult();
+                this.getTotalResult();
                 break;
             case "Backspace":
                 this.removeOneNumber();
