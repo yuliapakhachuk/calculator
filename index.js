@@ -115,8 +115,8 @@ class Calculator extends MathOper {
         if(!this.curentValue) {
             this.curentValue === this.#result;
         } else {
-            this.imposibleMathOperation();
             this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+            this.imposibleMathOperation();
         }
         this.refs.display.innerText = this.#result;
         this.calcMemory.push(this.#result);
