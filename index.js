@@ -2,28 +2,12 @@ class MathOper {
     getResult(operator, curentValue, resultValue) {
         switch(operator) {
             case "*":
-                console.log(resultValue);
-                console.log(this.operator);
-                console.log(this.curentValue);
                 return Number(resultValue) * Number(curentValue);
             case "/":
-                console.log(resultValue);
-                console.log(this.operator);
-                console.log(this.curentValue);
-                // return this.curentValue === "0" ? 
-                //     "Error" :       
-                //     Number(resultValue) / Number(curentValue);
                 return Number(resultValue) / Number(curentValue);
             case "-":
-                console.log(resultValue);
-                console.log(this.operator);
-                console.log(this.curentValue);
-
                 return ((Number(resultValue) * 1000000) - (Number(curentValue) * 1000000)) / 1000000;
             case "+":
-                console.log(resultValue);
-                console.log(this.operator);
-                console.log(this.curentValue);
                 return ((Number(resultValue) * 1000000) + (Number(curentValue) * 1000000)) / 1000000;
         }
     }
@@ -74,9 +58,13 @@ class Calculator extends MathOper {
     }
 
     removeOneNumber() {
-        this.curentValue.length <= 1 ? 
-            this.curentValue = "" :
-            this.curentValue = this.curentValue.slice(0, this.curentValue.length - 1);
+        let nuberOnDisplay = this.refs.display.innerText;
+        if(nuberOnDisplay.length <= 1) {
+            nuberOnDisplay = "";
+        } else {
+            nuberOnDisplay = nuberOnDisplay.slice(0, nuberOnDisplay.length - 1);
+        }
+        this.curentValue = nuberOnDisplay;
         this.refs.display.innerText = this.curentValue;
     }
 
@@ -150,10 +138,6 @@ class Calculator extends MathOper {
         this.curentValue = "";
         this.operator = !this.operator;
         this.refs.display.innerText = 0;
-        console.log(this.#result);
-        console.log(this.curentValue);
-        console.log(this.operator);
-        console.log(this.calcMemory);
     }
 
     contolKeyboard(e) {
