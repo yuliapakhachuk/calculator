@@ -2,13 +2,37 @@ class MathOper {
     getResult(operator, curentValue, resultValue) {
         switch(operator) {
             case "*":
+                console.log(resultValue);
+                console.log(this.operator);
+                console.log(this.curentValue);
                 return Number(resultValue) * Number(curentValue);
             case "/":
+                console.log(resultValue);
+                console.log(this.operator);
+                console.log(this.curentValue);
+                // return this.curentValue === "0" ? 
+                //     "Error" :       
+                //     Number(resultValue) / Number(curentValue);
                 return Number(resultValue) / Number(curentValue);
             case "-":
+                console.log(resultValue);
+                console.log(this.operator);
+                console.log(this.curentValue);
+
                 return ((Number(resultValue) * 1000000) - (Number(curentValue) * 1000000)) / 1000000;
             case "+":
+                console.log(resultValue);
+                console.log(this.operator);
+                console.log(this.curentValue);
                 return ((Number(resultValue) * 1000000) + (Number(curentValue) * 1000000)) / 1000000;
+        }
+    }
+
+    checkIsError(curentValue, operator) {
+        if(curentValue === "0" && operator === "/") {
+            return true;
+        } else {
+            return false;
         }
     }
 }
@@ -55,6 +79,14 @@ class Calculator extends MathOper {
             this.curentValue = this.curentValue.slice(0, this.curentValue.length - 1);
         this.refs.display.innerText = this.curentValue;
     }
+
+    imposibleMathOperation() {
+        const isError = super.checkIsError(this.curentValue, this.operator);
+        if(isError) {
+            alert("Error! Division by ZERO is prohibited");
+            this.resetCalculator();
+        }
+    }
     
     makeMathOperation(e) {
         const availableMathOper = ["+", "-", "*", "/"];
@@ -68,10 +100,10 @@ class Calculator extends MathOper {
                 this.curentValue === this.#result;
             } else {
                 this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+                this.imposibleMathOperation();
             }
             this.refs.display.innerText = this.#result;
         }
-        
         this.operator = e.type === "keydown" ? e.key : (e.target.dataset.value);
         this.recordHistory();
         this.refs.display.innerText = this.#result;
@@ -80,7 +112,12 @@ class Calculator extends MathOper {
 
     getTotalResult() {
         this.clearHistory();
-        this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+        if(!this.curentValue) {
+            this.curentValue === this.#result;
+        } else {
+            this.imposibleMathOperation();
+            this.#result = super.getResult(this.operator, this.curentValue, this.#result);
+        }
         this.refs.display.innerText = this.#result;
         this.calcMemory.push(this.#result);
         this.curentValue = "";
@@ -108,11 +145,15 @@ class Calculator extends MathOper {
     }
 
     resetCalculator() {
+        this.clearHistory();
         this.#result = 0;
         this.curentValue = "";
-        this.operator;
+        this.operator = !this.operator;
         this.refs.display.innerText = 0;
-        this.clearHistory();
+        console.log(this.#result);
+        console.log(this.curentValue);
+        console.log(this.operator);
+        console.log(this.calcMemory);
     }
 
     contolKeyboard(e) {
