@@ -53,11 +53,13 @@ class Calculator extends MathOper {
         const availableNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
         let number = e.type === "keydown" ? e.key : e.target.innerText;
         if (!availableNumbers.includes(number)) { return; };
-        this.curentValue = `${this.curentValue}` + `${number}`;
+        if (this.curentValue.slice(-1) === "." && number === ".") { return; }
+        this.curentValue = (`${this.curentValue}` + `${number}`).slice(0, 10);
         this.refs.display.innerText = this.curentValue;
     }
 
     removeOneNumber() {
+        if(!this.curentValue) {return}
         let nuberOnDisplay = this.refs.display.innerText;
         if(nuberOnDisplay.length <= 1) {
             nuberOnDisplay = "";
@@ -66,6 +68,11 @@ class Calculator extends MathOper {
         }
         this.curentValue = nuberOnDisplay;
         this.refs.display.innerText = this.curentValue;
+
+        console.log(this.curentValue);
+        console.log(this.#result);
+        console.log(this.operator);
+        console.log(this.calcMemory);
     }
 
     imposibleMathOperation() {
@@ -100,15 +107,31 @@ class Calculator extends MathOper {
 
     getTotalResult() {
         this.clearHistory();
+        console.log(this.curentValue);
+        console.log(this.#result);
+        console.log(this.operator);
+        console.log(this.calcMemory);
+
         if(!this.curentValue) {
             this.curentValue === this.#result;
         } else {
+            if (!this.operator) {
+                this.#result = this.curentValue;
+                return;
+            }
             this.#result = super.getResult(this.operator, this.curentValue, this.#result);
             this.imposibleMathOperation();
         }
         this.refs.display.innerText = this.#result;
         this.calcMemory.push(this.#result);
+        // this.recordHistory();
         this.curentValue = "";
+        // this.operator = !this.operator;
+
+        console.log(this.curentValue);
+        console.log(this.#result);
+        console.log(this.operator);
+        console.log(this.calcMemory);
     }
 
     recordHistory() {
@@ -138,6 +161,11 @@ class Calculator extends MathOper {
         this.curentValue = "";
         this.operator = !this.operator;
         this.refs.display.innerText = 0;
+
+        // console.log(this.curentValue);
+        // console.log(this.#result);
+        // console.log(this.operator);
+        // console.log(this.calcMemory);
     }
 
     contolKeyboard(e) {
